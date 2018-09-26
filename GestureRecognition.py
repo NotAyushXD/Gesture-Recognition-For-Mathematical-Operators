@@ -84,7 +84,7 @@ def calculateFingers(res,drawing):  # -> finished bool, cnt: finger count
                     cnt += 1
 
                     cv2.circle(drawing, far, 8, [211, 84, 100], -1) # This is for the circle on the valley between the fingers
-                    cv2.circle(drawing, end, 8, [211, 84, 100], -1)
+                    cv2.circle(drawing, end, 8, [211, 84, 100], -1)# This is for the circle on the top of the fingers
             return True, cnt
 
     return False, 0
@@ -148,7 +148,7 @@ while camera.isOpened():
         thresh1 = copy.deepcopy(thresh)
 
         _, contours, hierarchy = cv2.findContours(thresh1, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-	
+
         length = len(contours)
 
         maxArea = -1

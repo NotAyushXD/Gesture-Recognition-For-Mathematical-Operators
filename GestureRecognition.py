@@ -55,6 +55,7 @@ def calculateFingers(res,drawing):  # -> finished bool, cnt: finger count
     if len(hull) > 3:
 
         defects = cv2.convexityDefects(res, hull)
+		
 
         if type(defects) != type(None):  # avoid crashing.   (BUG not found)
 
@@ -83,7 +84,7 @@ def calculateFingers(res,drawing):  # -> finished bool, cnt: finger count
                     cnt += 1
 
                     cv2.circle(drawing, far, 8, [211, 84, 100], -1) # This is for the circle on the valley between the fingers
-
+                    cv2.circle(drawing, end, 8, [211, 84, 100], -1)
             return True, cnt
 
     return False, 0
@@ -146,8 +147,8 @@ while camera.isOpened():
 
         thresh1 = copy.deepcopy(thresh)
 
-        _,contours, hierarchy = cv2.findContours(thresh1, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-
+        _, contours, hierarchy = cv2.findContours(thresh1, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+	
         length = len(contours)
 
         maxArea = -1
@@ -172,17 +173,17 @@ while camera.isOpened():
 
             drawing = np.zeros(img.shape, np.uint8)
 
-            cv2.drawContours(drawing, [res], 0, (0, 255, 0), 2)
+            cv2.drawContours(drawing, [res], 0, (0, 255, 0), 2) # Outline of hands
 
-            cv2.drawContours(drawing, [hull], 0, (0, 0, 255), 3)
+            cv2.drawContours(drawing, [hull], 0, (0, 0, 255), 3)# Dots at the depression point
 
             isFinishCal, cnt = calculateFingers(res,drawing)
 
             if triggerSwitch is True:
 
-                if isFinishCal is True and cnt <= 2:
+                if isFinishCal is True and cnt <= 5:
 
-                    print (cnt)                    
+                    print (cnt+1)                    
 
         cv2.imshow('output', drawing)
 

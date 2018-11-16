@@ -16,8 +16,6 @@ import PIL
 from tkinter import *
 import tkinter as tk
 
-#
-
 # parameters
 
 cap_region_x_begin=0.5  # start point/total width
@@ -156,7 +154,6 @@ global paintWindow
 paintWindow = np.zeros((471,636,3)) + 255
 cv2.namedWindow('Paint', cv2.WINDOW_AUTOSIZE)
 count = 0
-
 while camera.isOpened():
 
 
@@ -241,7 +238,7 @@ while camera.isOpened():
         cv2.imshow('contour output', drawing)
         _, count = calculateFingers(res,drawing)
 
-        if(count+1 >1 and count+1 < 3 ):
+        if(count+1 >1 and count+1 < 3 ):# Checking if the no. of fingers is 2 if not then dont draw
             if len(contours) > 0:
             	# Sort the contours and find the largest one -- we
             	# will assume this contour correspondes to the area of the bottle cap
@@ -312,15 +309,42 @@ while camera.isOpened():
     # Keyboard OP
     k = cv2.waitKey(10)
 
+    if k == 27:  # press ESC to exit
+
+        break
     if k ==ord('s'):
         cv2.imwrite("DATA/img{}.jpg".format(count),paintWindow)
         count = count+1
 
+        bpoints = [deque(maxlen=512)]
+        gpoints = [deque(maxlen=512)]
+        rpoints = [deque(maxlen=512)]
+        ypoints = [deque(maxlen=512)]
+
+        bindex = 0
+        gindex = 0
+        rindex = 0
+        yindex = 0
+
+        paintWindow[67:,:,:] = 255
+        print("SCREEN SAVED")
+
+    if k ==ord('c'):
+
+        bpoints = [deque(maxlen=512)]
+        gpoints = [deque(maxlen=512)]
+        rpoints = [deque(maxlen=512)]
+        ypoints = [deque(maxlen=512)]
+
+        bindex = 0
+        gindex = 0
+        rindex = 0
+        yindex = 0
+
+        paintWindow[67:,:,:] = 255
+        print("SCREEN CLEARED")
 
 
-    if k == 27:  # press ESC to exit
-
-        break
 
     elif k == ord('b'):  # press 'b' to capture the background
 

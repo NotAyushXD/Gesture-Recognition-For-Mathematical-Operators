@@ -52,23 +52,13 @@ def removeBG(frame):
 
     # res = cv2.morphologyEx(fgmask, cv2.MORPH_OPEN, kernel)
 
-
-
     kernel = np.ones((3, 3), np.uint8)
-
-
 
     fgmask = cv2.erode(fgmask, kernel, iterations=1)
 
-
-
     res = cv2.bitwise_and(frame, frame, mask=fgmask)
 
-
-
     return res
-
-
 
 def calculateFingers(res,drawing):  # -> finished bool, cnt: finger count
 
@@ -158,25 +148,14 @@ gindex = 0
 rindex = 0
 yindex = 0
 
-colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (0, 255, 255)]
+colors = [(0, 0, 0),]
 colorIndex = 0
 
 # Setup the Paint interface
+global paintWindow
 paintWindow = np.zeros((471,636,3)) + 255
-paintWindow = cv2.rectangle(paintWindow, (40,1), (140,65), (0,0,0), 2)
-paintWindow = cv2.rectangle(paintWindow, (160,1), (255,65), colors[0], -1)
-paintWindow = cv2.rectangle(paintWindow, (275,1), (370,65), colors[1], -1)
-paintWindow = cv2.rectangle(paintWindow, (390,1), (485,65), colors[2], -1)
-paintWindow = cv2.rectangle(paintWindow, (505,1), (600,65), colors[3], -1)
-cv2.putText(paintWindow, "CLEAR ALL", (49, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2, cv2.LINE_AA)
-cv2.putText(paintWindow, "BLUE", (185, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
-cv2.putText(paintWindow, "GREEN", (298, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
-cv2.putText(paintWindow, "RED", (420, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
-cv2.putText(paintWindow, "YELLOW", (520, 33), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (150,150,150), 2, cv2.LINE_AA)
-
 cv2.namedWindow('Paint', cv2.WINDOW_AUTOSIZE)
-
-
+count = 0
 
 while camera.isOpened():
 
@@ -202,13 +181,11 @@ while camera.isOpened():
         img = removeBG(frame)
 
         img = img[0:int(cap_region_y_end * frame.shape[0]),
-
                     int(cap_region_x_begin * frame.shape[1]):frame.shape[1]]  # clip the ROI
 
         # cv2.imshow('mask', img)
 
         # convert the image into binary image
-
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
         blur = cv2.GaussianBlur(gray, (blurValue, blurValue), 0)
@@ -335,6 +312,12 @@ while camera.isOpened():
     # Keyboard OP
     k = cv2.waitKey(10)
 
+    if k ==ord('s'):
+        cv2.imwrite("DATA/img{}.jpg".format(count),paintWindow)
+        count = count+1
+
+
+
     if k == 27:  # press ESC to exit
 
         break
@@ -346,6 +329,7 @@ while camera.isOpened():
         isBgCaptured = 1
 
         print( '!!!Background Captured!!!')
+
 
     elif k == ord('r'):  # press 'r' to reset the background
 

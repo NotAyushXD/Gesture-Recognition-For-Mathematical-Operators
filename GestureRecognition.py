@@ -312,7 +312,7 @@ while camera.isOpened():
     if k == 27:  # press ESC to exit
 
         break
-    if k ==ord('s'):
+    if k ==ord('s'):#press 's' to Save and clear screen
         cv2.imwrite("DATA/img{}.jpg".format(count),paintWindow)
         count = count+1
 
@@ -329,7 +329,7 @@ while camera.isOpened():
         paintWindow[67:,:,:] = 255
         print("SCREEN SAVED")
 
-    if k ==ord('c'):
+    if k ==ord('c'):#press 'c' to Clear Screen
 
         bpoints = [deque(maxlen=512)]
         gpoints = [deque(maxlen=512)]

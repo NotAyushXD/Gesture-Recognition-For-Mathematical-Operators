@@ -106,7 +106,7 @@ def calculateFingers(res,drawing):  # -> finished bool, cnt: finger count
 
                     cv2.circle(drawing, end, 8, [211, 84, 100], -1)
 
-# Click operation
+		    # Click operation
                     # temp = list(far)
 
                     # pyautogui.click(temp[0], temp[1])

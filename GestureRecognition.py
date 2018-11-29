@@ -10,6 +10,8 @@ import pyautogui
 
 from collections import deque
 
+import predict_2
+import predict_1
 
 from PIL import ImageTk, Image, ImageDraw
 import PIL
@@ -22,11 +24,12 @@ cap_region_x_begin=0.5  # start point/total width
 
 cap_region_y_end=0.8  # start point/total width
 
-threshold = 35  #  BINARY threshold
+threshold = 24  #  BINARY threshold
 
 blurValue = 41  # GaussianBlur parameter
 
 bgSubThreshold = 50
+
 
 far = (0, 0)
 end = (0, 0)
@@ -106,7 +109,7 @@ def calculateFingers(res,drawing):  # -> finished bool, cnt: finger count
 
                     cv2.circle(drawing, end, 8, [211, 84, 100], -1)
 
-		    # Click operation
+# Click operation
                     # temp = list(far)
 
                     # pyautogui.click(temp[0], temp[1])
@@ -151,7 +154,7 @@ colorIndex = 0
 
 # Setup the Paint interface
 global paintWindow
-paintWindow = np.zeros((471,636,3)) + 255
+paintWindow = np.zeros((400,400,3)) + 255
 cv2.namedWindow('Paint', cv2.WINDOW_AUTOSIZE)
 count = 0
 while camera.isOpened():
@@ -168,8 +171,6 @@ while camera.isOpened():
     cv2.rectangle(frame, (int(cap_region_x_begin * frame.shape[1]), 0),
 
                  (frame.shape[1], int(cap_region_y_end * frame.shape[0])), (255, 0, 0), 2)
-
-    cv2.imshow('original', frame)
 
     #  Main operation
 
@@ -299,8 +300,8 @@ while camera.isOpened():
                     for k in range(1, len(points[i][j])):
                         if points[i][j][k - 1] is None or points[i][j][k] is None:
                             continue
-                        cv2.line(frame, points[i][j][k - 1], points[i][j][k], colors[i], 2)
-                        cv2.line(paintWindow, points[i][j][k - 1], points[i][j][k], colors[i], 2)
+                        cv2.line(frame, points[i][j][k - 1], points[i][j][k], colors[i], 10)
+                        cv2.line(paintWindow, points[i][j][k - 1], points[i][j][k], colors[i], 10)
 
         # Show the frame and the paintWindow image
         cv2.imshow("Tracking", frame)
@@ -313,8 +314,10 @@ while camera.isOpened():
 
         break
     if k ==ord('s'):#press 's' to Save and clear screen
-        cv2.imwrite("DATA/img{}.jpg".format(count),paintWindow)
-        count = count+1
+        st = "DATA/img{}.jpg".format(count)
+        count += 1
+        cv2.imwrite(st, paintWindow)
+        predict_1.main(st)
 
         bpoints = [deque(maxlen=512)]
         gpoints = [deque(maxlen=512)]
